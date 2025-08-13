@@ -1,88 +1,65 @@
-import { initRenderer, drawCircle, drawTriangle, drawLine } from './engine/renderer.js';
+import { initRenderer, drawCircle, drawTriangle, drawLine, drawRect } from './engine/renderer.js';
 import { updateTime, getDeltaTime } from './engine/time.js';
 import * as ecs from './engine/ecs.js';
-import { getGameState, decreaseLives } from './game/state.js';
+import { getGameState, decreaseLives, spendCurrency, setSelectedHero, getSelectedHero, setWinState } from './game/state.js';
 import { loadMap, drawMap, getWaypoints, isPlaceable } from './game/map.js';
-import { initWaves, updateWaves, startNextWave } from './game/wave.js';
+import { initWaves, updateWaves, startNextWave, isWaveSpawning, isLastWave } from './game/wave.js';
 import { initInput, getMousePosition, consumeClick } from './engine/input.js';
 import { createHero } from './game/entities.js';
 import { dealDamage } from './game/combat.js';
-import { initHUD, updateHUD } from './game/ui/hud.js';
+import { initHUD, updateHUD, showStartWaveButton, hideStartWaveButton } from './game/ui/hud.js';
 import { initShop } from './game/ui/shop.js';
-import { getSelectedHero, spendCurrency, setSelectedHero } from './game/state.js';
+import { initOverlays, showWinOverlay, showGameOverOverlay } from './game/ui/overlays.js';
 import heroesData from './game/data/heroes.json' with { type: 'json' };
 
 console.log("Game starting...");
+
+let waitingForNextWave = true;
 
 // --- Systems ---
 
 function handlePlacement() {
     if (!consumeClick()) return;
-
     const selectedHeroId = getSelectedHero();
     if (!selectedHeroId) return;
 
     const mousePos = getMousePosition();
     const heroData = heroesData.find(h => h.id === selectedHeroId);
-
-    if (!heroData) {
-        console.error(`Data for selected hero ${selectedHeroId} not found.`);
-        return;
-    }
+    if (!heroData) return;
 
     if (isPlaceable(mousePos.x, mousePos.y)) {
         if (spendCurrency(heroData.base.cost)) {
-            console.log(`Placing hero ${selectedHeroId} at ${mousePos.x}, ${mousePos.y}`);
             createHero(selectedHeroId, mousePos.x, mousePos.y);
-            // Deselect after placement for better UX
-            // This requires a bit more work in the UI to update the style
-            // For now, we'll leave it selected.
-            // setSelectedHero(null);
         } else {
             console.log("Not enough currency!");
-            // Here we could flash the currency display red
         }
-    } else {
-        console.log("Cannot place hero here.");
     }
 }
 
 function targetingSystem(dt) {
     const heroes = ecs.getEntitiesWithComponents('hero', 'position');
     const enemies = ecs.getEntitiesWithComponents('targetable', 'position');
-
     for (const heroId of heroes) {
         const hero = ecs.getComponent(heroId, 'hero');
         const heroPos = ecs.getComponent(heroId, 'position');
-
         hero.attackCooldown -= dt;
-
         if (hero.attackCooldown <= 0) {
             let closestEnemy = null;
-            let minDistance = hero.range * hero.range; // Use squared distance for efficiency
-
+            let minDistance = hero.range * hero.range;
             for (const enemyId of enemies) {
                 const enemyPos = ecs.getComponent(enemyId, 'position');
                 const distanceSq = (heroPos.x - enemyPos.x)**2 + (heroPos.y - enemyPos.y)**2;
-
                 if (distanceSq < minDistance) {
                     minDistance = distanceSq;
                     closestEnemy = enemyId;
                 }
             }
-
             if (closestEnemy) {
                 const enemyPos = ecs.getComponent(closestEnemy, 'position');
                 dealDamage(closestEnemy, hero.damage);
                 hero.attackCooldown = 1 / hero.rate;
-
-                // Create a temporary entity for the attack visual
                 const visualId = ecs.createEntity();
-                ecs.addComponent(visualId, 'attack_visual', {
-                    from: heroPos,
-                    to: enemyPos,
-                    duration: 0.1 // seconds
-                });
+                ecs.addComponent(visualId, 'attack_visual', { from: heroPos, to: enemyPos, duration: 0.1 });
             }
         }
     }
@@ -93,32 +70,26 @@ function visualsSystem(dt) {
     for (const visualId of visuals) {
         const visual = ecs.getComponent(visualId, 'attack_visual');
         visual.duration -= dt;
-        if (visual.duration <= 0) {
-            ecs.destroyEntity(visualId);
-        }
+        if (visual.duration <= 0) ecs.destroyEntity(visualId);
     }
 }
 
 function pathfindingSystem(dt) {
     const waypoints = getWaypoints();
     if (!waypoints) return;
-
     const entities = ecs.getEntitiesWithComponents('position', 'enemy');
     for (const entityId of entities) {
         const pos = ecs.getComponent(entityId, 'position');
         const enemy = ecs.getComponent(entityId, 'enemy');
-
         if (enemy.waypointIndex >= waypoints.length) {
             decreaseLives(1);
             ecs.destroyEntity(entityId);
             continue;
         }
-
         const targetWaypoint = waypoints[enemy.waypointIndex];
         const dirX = targetWaypoint.x - pos.x;
         const dirY = targetWaypoint.y - pos.y;
         const dist = Math.sqrt(dirX*dirX + dirY*dirY);
-
         if (dist < 5) {
             enemy.waypointIndex++;
         } else {
@@ -128,22 +99,40 @@ function pathfindingSystem(dt) {
     }
 }
 
+function handleWaveControl() {
+    if (waitingForNextWave) return;
+
+    if (!isWaveSpawning() && ecs.getEntitiesWithComponents('enemy').length === 0) {
+        if (isLastWave()) {
+            setWinState();
+        } else {
+            waitingForNextWave = true;
+            showStartWaveButton(triggerNextWave);
+        }
+    }
+}
+
 function renderSystem() {
     drawMap();
-
     const entities = ecs.getEntitiesWithComponents('position', 'renderable');
     for (const entityId of entities) {
         const pos = ecs.getComponent(entityId, 'position');
         const renderable = ecs.getComponent(entityId, 'renderable');
-
         if (renderable.shape === 'circle') {
             drawCircle(pos.x, pos.y, renderable.radius, renderable.color);
         } else if (renderable.shape === 'triangle') {
             drawTriangle(pos.x, pos.y, renderable.size, renderable.color);
         }
+        const health = ecs.getComponent(entityId, 'health');
+        if (health) {
+            const healthBarWidth = 30;
+            const healthBarHeight = 5;
+            const yOffset = (renderable.radius || renderable.size / 2 || 10) + 10;
+            const healthPercentage = health.current / health.max;
+            drawRect(pos.x - healthBarWidth / 2, pos.y - yOffset, healthBarWidth, healthBarHeight, '#555');
+            drawRect(pos.x - healthBarWidth / 2, pos.y - yOffset, healthBarWidth * healthPercentage, healthBarHeight, '#0f0');
+        }
     }
-
-    // Render attack visuals
     const visuals = ecs.getEntitiesWithComponents('attack_visual');
     for (const visualId of visuals) {
         const visual = ecs.getComponent(visualId, 'attack_visual');
@@ -152,12 +141,27 @@ function renderSystem() {
 }
 
 // --- Game Loop ---
+function triggerNextWave() {
+    waitingForNextWave = false;
+    startNextWave();
+    hideStartWaveButton();
+}
+
 function gameLoop(timestamp) {
     updateTime(timestamp);
     const dt = getDeltaTime();
     const state = getGameState();
 
-    if (!state.isPaused && !state.isGameOver) {
+    if (state.isGameWon) {
+        showWinOverlay();
+        return; // Stop the loop
+    }
+    if (state.isGameOver) {
+        showGameOverOverlay();
+        return; // Stop the loop
+    }
+
+    if (!state.isPaused) {
         update(dt);
     }
 
@@ -167,10 +171,14 @@ function gameLoop(timestamp) {
 
 function update(dt) {
     handlePlacement();
-    pathfindingSystem(dt);
-    targetingSystem(dt);
-    visualsSystem(dt);
-    updateWaves(dt);
+    handleWaveControl();
+
+    if (!waitingForNextWave) {
+        pathfindingSystem(dt);
+        targetingSystem(dt);
+        visualsSystem(dt);
+        updateWaves(dt);
+    }
 }
 
 function render() {
@@ -189,11 +197,12 @@ async function init() {
     initInput(canvas);
     initHUD();
     initShop();
-
-    await loadMap('simple_loop');
+    initOverlays();
     initWaves();
 
-    setTimeout(() => startNextWave(), 1000);
+    await loadMap('simple_loop');
+
+    showStartWaveButton(triggerNextWave);
 
     requestAnimationFrame(gameLoop);
 }

@@ -9,6 +9,7 @@ const gameState = {
     wave: 0,
     isPaused: false,
     isGameOver: false,
+    isGameWon: false,
     gameSpeed: 1,
     selectedHeroId: null,
 };
@@ -85,12 +86,18 @@ export function getSelectedHero() {
 }
 
 
+export function setWinState() {
+    gameState.isGameWon = true;
+    console.log("Player has won the game!");
+}
+
 export function resetState() {
     gameState.lives = 20;
     gameState.currency = 100;
     gameState.wave = 0;
     gameState.isPaused = false;
     gameState.isGameOver = false;
+    gameState.isGameWon = false;
     gameState.gameSpeed = 1;
     gameState.selectedHeroId = null;
 }

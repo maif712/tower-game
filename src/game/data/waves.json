@@ -21,5 +21,11 @@
             { "enemyId": "fast", "delay": 0.2 },
             { "enemyId": "fast", "delay": 0.2 }
         ]
+    },
+    {
+        "wave": 3,
+        "spawns": [
+            { "enemyId": "boss_grunt", "delay": 2.0 }
+        ]
     }
 ]

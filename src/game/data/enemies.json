@@ -22,5 +22,17 @@
             "radius": 8,
             "color": "#00ffff"
         }
+    },
+    {
+        "id": "boss_grunt",
+        "name": "Boss Grunt",
+        "speed": 50,
+        "health": 1000,
+        "currency": 100,
+        "render": {
+            "shape": "circle",
+            "radius": 25,
+            "color": "#880808"
+        }
     }
 ]

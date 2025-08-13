@@ -5,7 +5,7 @@
 
 import wavesData from './data/waves.json' with { type: 'json' };
 import { createEnemy } from './entities.js';
-import * as state from './state.js';
+import * as ecs from '../engine/ecs.js';
 
 let currentWaveIndex = -1;
 let currentWave = null;
@@ -78,6 +78,22 @@ export function updateWaves(dt) {
  * Checks if a wave is currently active.
  * @returns {boolean}
  */
-export function isWaveInProgress() {
+export function isWaveSpawning() {
     return isWaveActive;
+}
+
+/**
+ * Checks if the current wave is the last one.
+ * @returns {boolean}
+ */
+export function isLastWave() {
+    return currentWaveIndex === wavesData.length - 1;
+}
+
+/**
+ * Gets the current wave number (1-indexed).
+ * @returns {number}
+ */
+export function getCurrentWaveNumber() {
+    return currentWave ? currentWave.wave : 0;
 }
