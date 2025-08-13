@@ -10,6 +10,7 @@ const gameState = {
     isPaused: false,
     isGameOver: false,
     gameSpeed: 1,
+    selectedHeroId: null,
 };
 
 /**
@@ -66,6 +67,24 @@ export function togglePause() {
 /**
  * Resets the game state to its initial values.
  */
+/**
+ * Sets the currently selected hero for placement.
+ * @param {string | null} heroId The ID of the hero to select, or null to deselect.
+ */
+export function setSelectedHero(heroId) {
+    gameState.selectedHeroId = heroId;
+    console.log(`Hero selected: ${heroId}`);
+}
+
+/**
+ * Gets the ID of the currently selected hero.
+ * @returns {string | null}
+ */
+export function getSelectedHero() {
+    return gameState.selectedHeroId;
+}
+
+
 export function resetState() {
     gameState.lives = 20;
     gameState.currency = 100;
@@ -73,4 +92,5 @@ export function resetState() {
     gameState.isPaused = false;
     gameState.isGameOver = false;
     gameState.gameSpeed = 1;
+    gameState.selectedHeroId = null;
 }

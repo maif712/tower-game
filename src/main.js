@@ -8,20 +8,42 @@ import { initInput, getMousePosition, consumeClick } from './engine/input.js';
 import { createHero } from './game/entities.js';
 import { dealDamage } from './game/combat.js';
 import { initHUD, updateHUD } from './game/ui/hud.js';
+import { initShop } from './game/ui/shop.js';
+import { getSelectedHero, spendCurrency, setSelectedHero } from './game/state.js';
+import heroesData from './game/data/heroes.json' with { type: 'json' };
 
 console.log("Game starting...");
 
 // --- Systems ---
 
 function handlePlacement() {
-    if (consumeClick()) {
-        const mousePos = getMousePosition();
-        if (isPlaceable(mousePos.x, mousePos.y)) {
-            console.log(`Placing hero at ${mousePos.x}, ${mousePos.y}`);
-            createHero('arc_sentinel', mousePos.x, mousePos.y);
+    if (!consumeClick()) return;
+
+    const selectedHeroId = getSelectedHero();
+    if (!selectedHeroId) return;
+
+    const mousePos = getMousePosition();
+    const heroData = heroesData.find(h => h.id === selectedHeroId);
+
+    if (!heroData) {
+        console.error(`Data for selected hero ${selectedHeroId} not found.`);
+        return;
+    }
+
+    if (isPlaceable(mousePos.x, mousePos.y)) {
+        if (spendCurrency(heroData.base.cost)) {
+            console.log(`Placing hero ${selectedHeroId} at ${mousePos.x}, ${mousePos.y}`);
+            createHero(selectedHeroId, mousePos.x, mousePos.y);
+            // Deselect after placement for better UX
+            // This requires a bit more work in the UI to update the style
+            // For now, we'll leave it selected.
+            // setSelectedHero(null);
         } else {
-            console.log("Cannot place hero here.");
+            console.log("Not enough currency!");
+            // Here we could flash the currency display red
         }
+    } else {
+        console.log("Cannot place hero here.");
     }
 }
 
@@ -164,8 +186,9 @@ async function init() {
         return;
     }
     initRenderer(canvas);
-    initInput(canvas); // Initialize input system
+    initInput(canvas);
     initHUD();
+    initShop();
 
     await loadMap('simple_loop');
     initWaves();

@@ -10,6 +10,7 @@
         ]
       },
       "base": {
+        "cost": 100,
         "range": 150,
         "rate": 1.0,
         "damage": 25,
