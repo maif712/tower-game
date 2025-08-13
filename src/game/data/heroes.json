@@ -1,0 +1,33 @@
+[
+    {
+      "id": "arc_sentinel",
+      "name": "Arc Sentinel",
+      "role": "DPS",
+      "shape": {
+        "base": { "type": "triangle", "size": 20, "color": "#00ffff" },
+        "layers": [
+            { "type": "circle", "radius": 18, "color": "rgba(0, 255, 255, 0.2)" }
+        ]
+      },
+      "base": {
+        "range": 150,
+        "rate": 1.0,
+        "damage": 25,
+        "critChance": 0.05,
+        "critMult": 2.0
+      },
+      "levels": [
+        { "id": 1, "desc": "Chain to +1 target" },
+        { "id": 2, "desc": "+15% attack speed" },
+        { "id": 3, "desc": "Chain +2 targets, -10% per bounce" },
+        { "id": 4, "desc": "On-crit fork micro-bolt (20%)" },
+        { "id": 5, "desc": "Every 5th shot crits" }
+      ],
+      "ultimate": {
+        "name": "Thunderfield",
+        "cooldown": 45,
+        "duration": 6,
+        "effects": ["zapAoE","applyVuln20"]
+      }
+    }
+]

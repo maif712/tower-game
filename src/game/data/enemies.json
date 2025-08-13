@@ -1,0 +1,26 @@
+[
+    {
+        "id": "standard",
+        "name": "Standard Grunt",
+        "speed": 100,
+        "health": 50,
+        "currency": 5,
+        "render": {
+            "shape": "circle",
+            "radius": 10,
+            "color": "#ff4d4d"
+        }
+    },
+    {
+        "id": "fast",
+        "name": "Fast Mover",
+        "speed": 180,
+        "health": 30,
+        "currency": 3,
+        "render": {
+            "shape": "circle",
+            "radius": 8,
+            "color": "#00ffff"
+        }
+    }
+]

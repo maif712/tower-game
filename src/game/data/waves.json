@@ -1,0 +1,25 @@
+[
+    {
+        "wave": 1,
+        "spawns": [
+            { "enemyId": "standard", "delay": 0.5 },
+            { "enemyId": "standard", "delay": 0.5 },
+            { "enemyId": "standard", "delay": 0.5 },
+            { "enemyId": "standard", "delay": 0.5 },
+            { "enemyId": "standard", "delay": 0.5 }
+        ]
+    },
+    {
+        "wave": 2,
+        "spawns": [
+            { "enemyId": "standard", "delay": 0.4 },
+            { "enemyId": "standard", "delay": 0.4 },
+            { "enemyId": "standard", "delay": 0.4 },
+            { "enemyId": "standard", "delay": 0.4 },
+            { "enemyId": "standard", "delay": 0.4 },
+            { "enemyId": "fast", "delay": 1.0 },
+            { "enemyId": "fast", "delay": 0.2 },
+            { "enemyId": "fast", "delay": 0.2 }
+        ]
+    }
+]

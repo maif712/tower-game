@@ -1,0 +1,74 @@
+:root {
+    --bg-color: #1a1a2e;
+    --primary-color: #e0e0e0;
+    --accent-color: #00ffff;
+    --glass-bg: rgba(26, 26, 46, 0.7);
+    --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#game-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #0f0f1e;
+    box-shadow: 0 0 20px var(--shadow-color);
+}
+
+#ui-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Allow clicks to pass through to the canvas */
+}
+
+#ui-container > * {
+    pointer-events: all; /* Re-enable pointer events for UI elements */
+}
+
+/* --- HUD --- */
+#hud {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    gap: 20px;
+    padding: 10px 20px;
+    background: var(--glass-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.hud-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.hud-value {
+    color: var(--accent-color);
+    text-shadow: 0 0 5px var(--accent-color);
+}
