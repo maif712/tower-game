@@ -1,4 +1,4 @@
-import { initRenderer, drawCircle, drawTriangle, drawLine, drawRect } from './engine/renderer.js';
+import { initRenderer, drawCircle, drawTriangle, drawLine, drawRect, drawSquare, drawHexagon } from './engine/renderer.js';
 import { updateTime, getDeltaTime } from './engine/time.js';
 import * as ecs from './engine/ecs.js';
 import { getGameState, decreaseLives, spendCurrency, setSelectedHero, getSelectedHero, setWinState } from './game/state.js';
@@ -122,6 +122,10 @@ function renderSystem() {
             drawCircle(pos.x, pos.y, renderable.radius, renderable.color);
         } else if (renderable.shape === 'triangle') {
             drawTriangle(pos.x, pos.y, renderable.size, renderable.color);
+        } else if (renderable.shape === 'square') {
+            drawSquare(pos.x, pos.y, renderable.size, renderable.color);
+        } else if (renderable.shape === 'hexagon') {
+            drawHexagon(pos.x, pos.y, renderable.size, renderable.color);
         }
         const health = ecs.getComponent(entityId, 'health');
         if (health) {

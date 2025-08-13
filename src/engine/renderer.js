@@ -121,3 +121,39 @@ export function drawLine(x1, y1, x2, y2, color, width) {
     context.lineTo(x2, y2);
     context.stroke();
 }
+
+/**
+ * Draws a square centered at a point.
+ * @param {number} x - The x-coordinate of the center.
+ * @param {number} y - The y-coordinate of the center.
+ * @param {number} size - The side length of the square.
+ * @param {string} color - The fill color.
+ */
+export function drawSquare(x, y, size, color) {
+    drawRect(x - size / 2, y - size / 2, size, size, color);
+}
+
+/**
+ * Draws a regular hexagon centered at a point.
+ * @param {number} x - The x-coordinate of the center.
+ * @param {number} y - The y-coordinate of the center.
+ * @param {number} size - The radius (distance from center to vertex).
+ * @param {string} color - The fill color.
+ */
+export function drawHexagon(x, y, size, color) {
+    if (!context) return;
+    context.fillStyle = color;
+    context.beginPath();
+    for (let i = 0; i < 6; i++) {
+        const angle = Math.PI / 3 * i + Math.PI / 6; // Add offset to make it flat-topped
+        const vertexX = x + size * Math.cos(angle);
+        const vertexY = y + size * Math.sin(angle);
+        if (i === 0) {
+            context.moveTo(vertexX, vertexY);
+        } else {
+            context.lineTo(vertexX, vertexY);
+        }
+    }
+    context.closePath();
+    context.fill();
+}
