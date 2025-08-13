@@ -200,3 +200,66 @@ body {
     transform: scale(1.05);
     box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
 }
+
+/* --- Inspector Panel --- */
+#inspector-panel {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 250px;
+    background: var(--glass-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    color: var(--primary-color);
+    z-index: 10;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.panel-header h3 {
+    margin: 0;
+}
+
+#close-inspector-btn {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.panel-content {
+    padding: 15px;
+}
+
+.panel-content p {
+    margin: 0 0 10px;
+}
+
+.upgrade-section {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#upgrade-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--bg-color);
+    background-color: var(--accent-color);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+}

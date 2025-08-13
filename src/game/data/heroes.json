@@ -3,33 +3,14 @@
       "id": "arc_sentinel",
       "name": "Arc Sentinel",
       "role": "DPS",
-      "shape": {
-        "base": { "type": "triangle", "size": 20, "color": "#00ffff" },
-        "layers": [
-            { "type": "circle", "radius": 18, "color": "rgba(0, 255, 255, 0.2)" }
-        ]
-      },
-      "base": {
-        "cost": 100,
-        "range": 150,
-        "rate": 1.0,
-        "damage": 25,
-        "critChance": 0.05,
-        "critMult": 2.0
-      },
+      "shape": { "base": { "type": "triangle", "size": 20, "color": "#00ffff" } },
+      "base": { "cost": 100, "range": 150, "rate": 1.0, "damage": 25 },
       "levels": [
-        { "id": 1, "desc": "Chain to +1 target" },
-        { "id": 2, "desc": "+15% attack speed" },
-        { "id": 3, "desc": "Chain +2 targets, -10% per bounce" },
-        { "id": 4, "desc": "On-crit fork micro-bolt (20%)" },
-        { "id": 5, "desc": "Every 5th shot crits" }
+        { "cost": 80, "desc": "+10 Damage, +10 Range", "stats": { "damage": 10, "range": 10 } },
+        { "cost": 120, "desc": "+15 Damage, +0.2 Attack Rate", "stats": { "damage": 15, "rate": 0.2 } },
+        { "cost": 200, "desc": "+20 Damage, +20 Range", "stats": { "damage": 20, "range": 20 } }
       ],
-      "ultimate": {
-        "name": "Thunderfield",
-        "cooldown": 45,
-        "duration": 6,
-        "effects": ["zapAoE","applyVuln20"]
-      }
+      "ultimate": { "name": "Thunderfield", "cooldown": 45 }
     },
     {
       "id": "bulwark_node",
@@ -37,17 +18,25 @@
       "role": "Tank/Support",
       "shape": { "base": { "type": "square", "size": 22, "color": "#a9a9a9" } },
       "base": { "cost": 120, "range": 100, "rate": 0, "damage": 0 },
-      "levels": [],
-      "ultimate": { "name": "Bastion", "cooldown": 60, "duration": 5 }
+      "levels": [
+        { "cost": 100, "desc": "+20 Range", "stats": { "range": 20 } },
+        { "cost": 150, "desc": "+20 Range", "stats": { "range": 20 } },
+        { "cost": 200, "desc": "+30 Range", "stats": { "range": 30 } }
+      ],
+      "ultimate": { "name": "Bastion", "cooldown": 60 }
     },
     {
       "id": "ember_bloom",
       "name": "Ember Bloom",
       "role": "DoT/Zone",
       "shape": { "base": { "type": "circle", "radius": 12, "color": "#ff4500" } },
-      "base": { "cost": 150, "range": 130, "rate": 1.2, "damage": 10 },
-      "levels": [],
-      "ultimate": { "name": "Solar Flare", "cooldown": 55, "duration": 2 }
+      "base": { "cost": 150, "range": 130, "rate": 1.2, "damage": 12 },
+      "levels": [
+        { "cost": 100, "desc": "+5 Damage, +10 Range", "stats": { "damage": 5, "range": 10 } },
+        { "cost": 150, "desc": "+8 Damage, +0.2 Attack Rate", "stats": { "damage": 8, "rate": 0.2 } },
+        { "cost": 220, "desc": "+10 Damage, +20 Range", "stats": { "damage": 10, "range": 20 } }
+      ],
+      "ultimate": { "name": "Solar Flare", "cooldown": 55 }
     },
     {
       "id": "prism_warden",
@@ -55,7 +44,11 @@
       "role": "Utility",
       "shape": { "base": { "type": "hexagon", "size": 15, "color": "#f0f" } },
       "base": { "cost": 130, "range": 180, "rate": 0.8, "damage": 15 },
-      "levels": [],
-      "ultimate": { "name": "Refract", "cooldown": 50, "duration": 7 }
+      "levels": [
+        { "cost": 90, "desc": "+5 Damage, +20 Range", "stats": { "damage": 5, "range": 20 } },
+        { "cost": 140, "desc": "+7 Damage, +0.3 Attack Rate", "stats": { "damage": 7, "rate": 0.3 } },
+        { "cost": 200, "desc": "+10 Damage, +20 Range", "stats": { "damage": 10, "range": 20 } }
+      ],
+      "ultimate": { "name": "Refract", "cooldown": 50 }
     }
 ]

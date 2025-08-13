@@ -1,15 +1,16 @@
 import { initRenderer, drawCircle, drawTriangle, drawLine, drawRect, drawSquare, drawHexagon } from './engine/renderer.js';
 import { updateTime, getDeltaTime } from './engine/time.js';
 import * as ecs from './engine/ecs.js';
-import { getGameState, decreaseLives, spendCurrency, setSelectedHero, getSelectedHero, setWinState } from './game/state.js';
+import { getGameState, decreaseLives, spendCurrency, setSelectedHero, getSelectedHero, setWinState, setSelectedEntity, getSelectedEntity } from './game/state.js';
 import { loadMap, drawMap, getWaypoints, isPlaceable } from './game/map.js';
 import { initWaves, updateWaves, startNextWave, isWaveSpawning, isLastWave } from './game/wave.js';
 import { initInput, getMousePosition, consumeClick } from './engine/input.js';
-import { createHero } from './game/entities.js';
+import { createHero, upgradeHero } from './game/entities.js';
 import { dealDamage } from './game/combat.js';
 import { initHUD, updateHUD, showStartWaveButton, hideStartWaveButton } from './game/ui/hud.js';
 import { initShop } from './game/ui/shop.js';
 import { initOverlays, showWinOverlay, showGameOverOverlay } from './game/ui/overlays.js';
+import { initPanels, showInspector, hideInspector } from './game/ui/panels.js';
 import heroesData from './game/data/heroes.json' with { type: 'json' };
 
 console.log("Game starting...");
@@ -18,12 +19,39 @@ let waitingForNextWave = true;
 
 // --- Systems ---
 
-function handlePlacement() {
+function handleClicks() {
     if (!consumeClick()) return;
+
+    const mousePos = getMousePosition();
+
+    // 1. Check if a hero was clicked
+    const heroes = ecs.getEntitiesWithComponents('hero', 'position', 'renderable');
+    let heroClicked = false;
+    for (const heroId of heroes) {
+        const heroPos = ecs.getComponent(heroId, 'position');
+        const renderable = ecs.getComponent(heroId, 'renderable');
+        const clickRadius = (renderable.size || renderable.radius || 15);
+        const distanceSq = (mousePos.x - heroPos.x)**2 + (mousePos.y - heroPos.y)**2;
+
+        if (distanceSq < clickRadius * clickRadius) {
+            setSelectedEntity(heroId);
+            showInspector(heroId);
+            // In shop.js, we should add logic to deselect cards when an entity is selected
+            heroClicked = true;
+            break;
+        }
+    }
+
+    if (heroClicked) return;
+
+    // 2. If no hero was clicked, it's a click on the map.
+    hideInspector();
+    setSelectedEntity(null);
+
+    // 3. Check if we should place a hero
     const selectedHeroId = getSelectedHero();
     if (!selectedHeroId) return;
 
-    const mousePos = getMousePosition();
     const heroData = heroesData.find(h => h.id === selectedHeroId);
     if (!heroData) return;
 
@@ -35,6 +63,7 @@ function handlePlacement() {
         }
     }
 }
+
 
 function targetingSystem(dt) {
     const heroes = ecs.getEntitiesWithComponents('hero', 'position');
@@ -136,6 +165,20 @@ function renderSystem() {
             drawRect(pos.x - healthBarWidth / 2, pos.y - yOffset, healthBarWidth, healthBarHeight, '#555');
             drawRect(pos.x - healthBarWidth / 2, pos.y - yOffset, healthBarWidth * healthPercentage, healthBarHeight, '#0f0');
         }
+
+        // Draw level indicator if the entity is a hero and has a level
+        const hero = ecs.getComponent(entityId, 'hero');
+        if (hero && hero.level > 0) {
+            const levelIndicatorYOffset = (renderable.radius || renderable.size / 2 || 10) + 5;
+            const indicatorRadius = 3;
+            const indicatorSpacing = 8;
+            const totalWidth = (hero.level - 1) * indicatorSpacing;
+            const startX = pos.x - totalWidth / 2;
+
+            for (let i = 0; i < hero.level; i++) {
+                drawCircle(startX + i * indicatorSpacing, pos.y + levelIndicatorYOffset, indicatorRadius, '#ffd700');
+            }
+        }
     }
     const visuals = ecs.getEntitiesWithComponents('attack_visual');
     for (const visualId of visuals) {
@@ -158,11 +201,11 @@ function gameLoop(timestamp) {
 
     if (state.isGameWon) {
         showWinOverlay();
-        return; // Stop the loop
+        return;
     }
     if (state.isGameOver) {
         showGameOverOverlay();
-        return; // Stop the loop
+        return;
     }
 
     if (!state.isPaused) {
@@ -174,7 +217,7 @@ function gameLoop(timestamp) {
 }
 
 function update(dt) {
-    handlePlacement();
+    handleClicks();
     handleWaveControl();
 
     if (!waitingForNextWave) {
@@ -202,6 +245,7 @@ async function init() {
     initHUD();
     initShop();
     initOverlays();
+    initPanels();
     initWaves();
 
     await loadMap('simple_loop');

@@ -11,7 +11,8 @@ const gameState = {
     isGameOver: false,
     isGameWon: false,
     gameSpeed: 1,
-    selectedHeroId: null,
+    selectedHeroId: null, // For building
+    selectedEntityId: null, // For inspecting
 };
 
 /**
@@ -74,7 +75,10 @@ export function togglePause() {
  */
 export function setSelectedHero(heroId) {
     gameState.selectedHeroId = heroId;
-    console.log(`Hero selected: ${heroId}`);
+    if (heroId !== null) {
+        gameState.selectedEntityId = null; // Deselect entity when selecting from shop
+    }
+    console.log(`Hero selected for building: ${heroId}`);
 }
 
 /**
@@ -91,6 +95,26 @@ export function setWinState() {
     console.log("Player has won the game!");
 }
 
+/**
+ * Sets the currently selected entity for inspection.
+ * @param {number | null} entityId The ID of the entity to select, or null to deselect.
+ */
+export function setSelectedEntity(entityId) {
+    gameState.selectedEntityId = entityId;
+    if (entityId !== null) {
+        gameState.selectedHeroId = null; // Deselect from shop when selecting entity
+    }
+    console.log(`Entity selected for inspection: ${entityId}`);
+}
+
+/**
+ * Gets the ID of the currently selected entity.
+ * @returns {number | null}
+ */
+export function getSelectedEntity() {
+    return gameState.selectedEntityId;
+}
+
 export function resetState() {
     gameState.lives = 20;
     gameState.currency = 100;
@@ -100,4 +124,5 @@ export function resetState() {
     gameState.isGameWon = false;
     gameState.gameSpeed = 1;
     gameState.selectedHeroId = null;
+    gameState.selectedEntityId = null;
 }

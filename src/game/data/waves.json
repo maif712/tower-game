@@ -2,28 +2,66 @@
     {
         "wave": 1,
         "spawns": [
-            { "enemyId": "standard", "delay": 0.5 },
-            { "enemyId": "standard", "delay": 0.5 },
-            { "enemyId": "standard", "delay": 0.5 },
-            { "enemyId": "standard", "delay": 0.5 },
-            { "enemyId": "standard", "delay": 0.5 }
+            { "enemyId": "standard", "delay": 1.0 },
+            { "enemyId": "standard", "delay": 1.0 },
+            { "enemyId": "standard", "delay": 1.0 },
+            { "enemyId": "standard", "delay": 1.0 },
+            { "enemyId": "standard", "delay": 1.0 }
         ]
     },
     {
         "wave": 2,
         "spawns": [
-            { "enemyId": "standard", "delay": 0.4 },
-            { "enemyId": "standard", "delay": 0.4 },
-            { "enemyId": "standard", "delay": 0.4 },
-            { "enemyId": "standard", "delay": 0.4 },
-            { "enemyId": "standard", "delay": 0.4 },
+            { "enemyId": "standard", "delay": 0.8 },
+            { "enemyId": "standard", "delay": 0.8 },
+            { "enemyId": "fast", "delay": 1.5 },
+            { "enemyId": "fast", "delay": 0.3 },
+            { "enemyId": "fast", "delay": 0.3 },
+            { "enemyId": "standard", "delay": 0.8 }
+        ]
+    },
+    {
+        "wave": 3,
+        "spawns": [
+            { "enemyId": "standard", "delay": 0.5 },
+            { "enemyId": "standard", "delay": 0.5 },
+            { "enemyId": "standard", "delay": 0.5 },
+            { "enemyId": "fast", "delay": 1.0 },
             { "enemyId": "fast", "delay": 1.0 },
             { "enemyId": "fast", "delay": 0.2 },
             { "enemyId": "fast", "delay": 0.2 }
         ]
     },
     {
-        "wave": 3,
+        "wave": 4,
+        "spawns": [
+            { "enemyId": "fast", "delay": 0.2 },
+            { "enemyId": "fast", "delay": 0.2 },
+            { "enemyId": "fast", "delay": 0.2 },
+            { "enemyId": "fast", "delay": 0.2 },
+            { "enemyId": "fast", "delay": 0.2 },
+            { "enemyId": "fast", "delay": 0.2 },
+            { "enemyId": "fast", "delay": 0.2 },
+            { "enemyId": "fast", "delay": 0.2 }
+        ]
+    },
+    {
+        "wave": 5,
+        "spawns": [
+            { "enemyId": "standard", "delay": 0.3 },
+            { "enemyId": "standard", "delay": 0.3 },
+            { "enemyId": "standard", "delay": 0.3 },
+            { "enemyId": "standard", "delay": 0.3 },
+            { "enemyId": "standard", "delay": 0.3 },
+            { "enemyId": "standard", "delay": 0.3 },
+            { "enemyId": "standard", "delay": 0.3 },
+            { "enemyId": "standard", "delay": 0.3 },
+            { "enemyId": "standard", "delay": 0.3 },
+            { "enemyId": "standard", "delay": 0.3 }
+        ]
+    },
+    {
+        "wave": 6,
         "spawns": [
             { "enemyId": "boss_grunt", "delay": 2.0 }
         ]

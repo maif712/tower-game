@@ -89,6 +89,8 @@ export function createHero(heroId, x, y) {
 
     // Hero component - for targeting, stats
     ecs.addComponent(entity, 'hero', {
+        id: heroData.id,
+        level: 0,
         ...heroData.base,
         attackCooldown: 0, // Ready to fire immediately
     });
