@@ -3,7 +3,7 @@
  * Manages loading and rendering the game map and path.
  */
 
-import mapsData from './data/maps.json';
+import mapsData from './data/maps.json' with { type: 'json' };
 import { getContext } from '../engine/renderer.js';
 
 let currentMap = null;

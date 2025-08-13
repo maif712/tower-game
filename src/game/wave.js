@@ -3,7 +3,7 @@
  * Manages enemy waves.
  */
 
-import wavesData from './data/waves.json';
+import wavesData from './data/waves.json' with { type: 'json' };
 import { createEnemy } from './entities.js';
 import * as state from './state.js';
 

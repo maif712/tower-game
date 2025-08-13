@@ -4,8 +4,8 @@
  */
 
 import * as ecs from '../engine/ecs.js';
-import enemiesData from './data/enemies.json';
-import heroesData from './data/heroes.json';
+import enemiesData from './data/enemies.json' with { type: 'json' };
+import heroesData from './data/heroes.json' with { type: 'json' };
 import { getStartPosition } from './map.js';
 
 /**
