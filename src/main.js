@@ -5,7 +5,7 @@ import { getGameState, decreaseLives, spendCurrency, setSelectedHero, getSelecte
 import { loadMap, drawMap, getWaypoints, isPlaceable } from './game/map.js';
 import { initWaves, updateWaves, startNextWave, isWaveSpawning, isLastWave } from './game/wave.js';
 import { initInput, getMousePosition, consumeClick } from './engine/input.js';
-import { createHero, upgradeHero } from './game/entities.js';
+import { createHero } from './game/entities.js';
 import { dealDamage } from './game/combat.js';
 import { initHUD, updateHUD, showStartWaveButton, hideStartWaveButton } from './game/ui/hud.js';
 import { initShop } from './game/ui/shop.js';
